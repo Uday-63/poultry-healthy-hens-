@@ -6,7 +6,7 @@ stages {
 
 stage('Clone Repository') {
 steps {
-git 'https://github.com/yourusername/healthy-hens-app.git'
+git ''https://github.com/Uday-63/poultry-healthy-hens-.git
 }
 }
 
