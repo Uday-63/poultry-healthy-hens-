@@ -4,7 +4,7 @@ agent any
 
 stages {
 
-stage('Clone Repository') {
+stage('git checkout') {
 steps {
 git 'https://github.com/Uday-63/poultry-healthy-hens-.git'
 }
