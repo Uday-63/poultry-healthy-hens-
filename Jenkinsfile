@@ -1,45 +1,39 @@
 pipeline {
+    agent any
 
-agent any
+    stages {
 
-stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Uday-63/poultry-healthy-hens-.git'
+            }
+        }
 
-stage('git checkout') {
-steps {
-git 'https://github.com/Uday-63/poultry-healthy-hens-.git'
-}
-}
+        stage('Build WAR File') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
 
-stage('Build WAR File') {
-steps {
-sh 'jar -cvf healthy-hens.war *'
-}
-}
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t healthy-hens .'
+            }
+        }
 
-stage('Build Docker Image') {
-steps {
-sh 'docker build -t healthy-hens:latest .'
-}
-}
+        stage('Run Docker Container') {
+            steps {
+                sh 'docker run -d -p 8080:80 healthy-hens'
+            }
+        }
+    }
 
-stage('Run Docker Container') {
-steps {
-sh '''
-docker rm -f healthy-hens-container || true
-docker run -d -p 2020:8080 --name healthy-hens-container healthy-hens:latest
-'''
-}
-}
-
-}
-
-post {
-success {
-echo "✅ Application Deployed Successfully"
-}
-failure {
-echo "❌ Pipeline Failed"
-}
-}
-
+    post {
+        failure {
+            echo '❌ Pipeline Failed'
+        }
+        success {
+            echo '✅ Pipeline Success'
+        }
+    }
 }
